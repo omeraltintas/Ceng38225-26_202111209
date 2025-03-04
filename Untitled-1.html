@@ -1,0 +1,270 @@
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("https://external-preview.redd.it/aC7zQKO6GH1UVuAB_K31hwncC23H-O3C1-CJODnHB_U.png?width=640&crop=smart&auto=webp&s=2390ffe7bbf0a6149dc6233a6f38d7eee143085b");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-repeat: no-repeat;
+            font-family: Roboto, Arial, sans-serif;
+            color: #080808e8;
+        }
+
+        .top-section {
+            display: flex;
+            justify-content: center;
+            /* Yatayda ortala */
+            align-items: center;
+            /* Dikeyde ortala */
+            margin-bottom: 30px;
+            /* Form ile araya boşluk bırak */
+            position: relative;
+        }
+
+
+        input {
+            outline: none;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-weight: 500;
+        }
+
+        form {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            border-radius: 30px;
+            /* background: #fff; */
+        }
+
+        .form-left-decoration,
+        .form-right-decoration {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 20px;
+            border-radius: 20px;
+            background: #5a7233;
+        }
+
+        .form-left-decoration {
+            bottom: 60px;
+            left: -30px;
+        }
+
+        .form-right-decoration {
+            top: 60px;
+            right: -30px;
+        }
+
+        .form-left-decoration:before,
+        .form-left-decoration:after,
+        .form-right-decoration:before,
+        .form-right-decoration:after {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 20px;
+            border-radius: 30px;
+            background: #fff;
+        }
+
+        .form-left-decoration:before {
+            top: -20px;
+        }
+
+        .form-left-decoration:after {
+            top: 20px;
+            left: 10px;
+        }
+
+        .form-right-decoration:before {
+            top: -20px;
+            right: 0;
+        }
+
+        .form-right-decoration:after {
+            top: 20px;
+            right: 10px;
+        }
+
+        .circle {
+            position: absolute;
+            bottom: 80px;
+            left: -55px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        .form-inner {
+            padding: 40px;
+        }
+
+        .form-inner input {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 20px;
+            background: #d0dfe8;
+        }
+
+        .form-inner textarea {
+            resize: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 20px;
+            border: none;
+            border-bottom: 4px solid #3e4f24;
+            background: #5a7233;
+            font-size: 16px;
+            font-weight: 400;
+            color: #fff;
+        }
+
+        button:hover {
+            background: #3e4f24;
+        }
+
+        @media (min-width: 568px) {
+            form {
+                width: 60%;
+            }
+        }
+
+        /* 🔥 Charmander Alevi */
+        .flame {
+            width: 40px;
+            height: 60px;
+            background: radial-gradient(circle, orange 40%, red 60%, yellow 80%);
+            border-radius: 50%;
+            position: relative;
+            animation: flicker 0.2s infinite alternate;
+        }
+
+        .flame::before {
+            content: "";
+            width: 30px;
+            height: 50px;
+            background: radial-gradient(circle, yellow 30%, orange 70%);
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            border-radius: 50%;
+            animation: flicker 0.15s infinite alternate;
+        }
+
+        /* Ateş Efekti */
+        @keyframes flicker {
+            0% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.1) rotate(3deg);
+                opacity: 0.9;
+            }
+        }
+
+        .flame {
+            width: 40px;
+            height: 60px;
+            background: radial-gradient(circle, orange 40%, red 60%, yellow 80%);
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            /* Alevin üstte kalmasını sağla */
+        }
+
+        /* 🎮 Poké Topu */
+        .pokemon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(to bottom, red 50%, white 50%);
+            border: 4px solid black;
+            border-radius: 50%;
+            position: absolute;
+            /* Alevin etrafında dönmesi için */
+            top: 50%;
+            left: 50%;
+
+            /* 🔥 Alevin etrafında dönmesi için */
+            transform-origin: center center;
+            /* Alevin tam ortasını merkez yap */
+            animation: rotateAroundFlame 3s linear infinite;
+        }
+
+        /* Poké Topu'nun siyah çizgisi */
+        .pokemon::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 8px;
+            background: black;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        /* Poké Topu'nun ortasındaki düğme */
+        .pokemon::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 4px solid black;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 🔥 Poké Topu Alevin Etrafında Döner */
+        @keyframes rotateAroundFlame {
+            0% {
+                transform: rotate(0deg) translateX(60px) rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg) translateX(60px) rotate(-360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-section">
+        <div class="flame"></div>
+        <div class="pokemon"></div>
+    </div>
+    <form class="decor">
+        <div class="form-left-decoration"></div>
+        <div class="form-right-decoration"></div>
+        <div class="circle"></div>
+        <div class="form-inner">
+            <h1>Giriş Yap</h1>
+            <input type="text" placeholder="Kullanıcı Adı">
+            <input type="email" placeholder="Email">
+            <input type="password" placeholder="Şifre">
+            <button type="submit" href="/">Giriş</button>
+    </form>
+
+</body>
+</html>
