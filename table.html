@@ -1,0 +1,58 @@
+<html>
+<head>
+<style>
+    tr:hover{
+        background-color: aqua;
+    }
+</style>
+</head>
+<body>
+    <form id="datas">
+        <input type="text" id="cname" placeholder="Class name"><br>
+        <input type="text" id="people" placeholder="Number of People"><br>
+        <input type="text" id="desc" placeholder="Description"><br><br>
+        <button type="submit">Kaydet</button>
+    </form>
+    <br><br><br><br>
+    <table id="datastable">
+        <tr>
+            <th>Class Name</th>
+            <th>Number of People</th>
+            <th>Description</th>
+        </tr>
+        <tbody>
+
+        </tbody>
+    </table>
+    
+<script>
+    const form=document.getElementById('datas');
+    const tabled=document.getElementById('datastable').getElementsByTagName('tbody')[0];
+
+    form.addEventListener('submit',function(event){
+        event.preventDefault();
+        const name=document.getElementById("cname").value;
+        const peoples=document.getElementById("people").value;
+        const descr=document.getElementById("desc").value;
+        
+        const newrow=tabled.insertRow();
+        const first=newrow.insertCell(0);
+        const second=newrow.insertCell(1);
+        const third=newrow.insertCell(2);
+
+        first.textContent=name;
+        second.textContent=peoples;
+        third.textContent=descr;
+
+        newrow.style.cursor='pointer';
+        newrow.addEventListener('click',function(event){
+            tabled.deleteRow(newrow.rowIndex);
+        })
+
+
+        form.reset();
+    })
+</script>
+</body>
+
+</html>
