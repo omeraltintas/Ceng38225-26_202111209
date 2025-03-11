@@ -35,6 +35,11 @@
             font-weight: 500;
         }
 
+        h4 {
+            margin-top: 0;
+            font-weight: 300;
+        }
+
         form {
             position: fixed;
             bottom: 20px;
@@ -249,7 +254,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="liveClock()" onkeydown="pressKey()">
     <div class="top-section">
         <div class="flame"></div>
         <div class="pokemon"></div>
@@ -260,11 +265,45 @@
         <div class="circle"></div>
         <div class="form-inner">
             <h1>Giriş Yap</h1>
-            <input type="text" placeholder="Kullanıcı Adı">
-            <input type="email" placeholder="Email">
-            <input type="password" placeholder="Şifre">
-            <button type="submit" href="/">Giriş</button>
+            <br>
+            <div id="clock">
+                <h1></h1>
+            </div>
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Şifre">
+            <button type="submit" onclick="getData()">Giriş</button>
     </form>
+    <script>
+        function getData() {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            let datas = { "email ": email, "password ": password };
+            console.log(datas)
+        }
 
+        function liveClock() {
+            const clock = new Date();
+            let hour = clock.getHours();
+            let minute = clock.getMinutes();
+            let second = clock.getSeconds();
+            document.getElementById("clock").innerHTML = hour + ":" + minute + ":" + second;
+            setTimeout(liveClock, 1000);
+        }
+
+        function pressKey() {
+            document.addEventListener("keydown", function (event) {
+                if (event.keyCode == 72) {
+                    var x = document.querySelectorAll("form");
+                    x.forEach(x => {
+                        if (x.style.display === "none") {
+                            x.style.display = "block";
+                        } else {
+                            x.style.display = "none";
+                        }
+                    })
+                }
+            })
+        }
+    </script>
 </body>
 </html>
