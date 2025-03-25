@@ -1,0 +1,74 @@
+﻿@page
+@model LabProject.Pages.IndexModel
+@{
+    ViewData["Title"] = "Class Information";
+}
+
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>@(Model.classInformationModel != null && Model.classInformationModel.Id == 0 ? "Add New Class" : "Edit Class")</h3>
+        <form method="post">
+            <div class="form-group">
+                <label for="ClassName">Class Name</label>
+                <input type="text" class="form-control" id="ClassName" 
+                       name="classInformationModel.ClassName" 
+                       value="@Model.classInformationModel.ClassName" required />
+            </div>
+      
+            <div class="form-group">
+                <label for="StudentCount">Student Count</label>
+                <input type="number" class="form-control" id="StudentCount" 
+                       name="classInformationModel.StudentCount" 
+                       value="@Model.classInformationModel.StudentCount" required />
+            </div>
+            <div class="form-group">
+                <label for="Description">Description</label>
+                <textarea class="form-control" id="Description" 
+                          name="classInformationModel.Description" required>@Model.classInformationModel.Description</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                @(Model.classInformationModel.Id == 0 ? "Add Class" : "Save Changes")
+            </button>
+            @if (Model.classInformationModel.Id != 0)
+            {
+                <a href="?" class="btn btn-secondary">Cancel</a>
+            }
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <h3>Class List</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Class Name</th>
+                    <th>Student Count</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var classInfo in IndexModel.Classes)
+                {
+                    <tr>
+                        <td>@classInfo.Id</td>
+                        <td>@classInfo.ClassName</td>
+                        <td>@classInfo.StudentCount</td>
+                        <td>@classInfo.Description</td>
+                        <td>
+                            <form method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-warning btn-sm" name="id" value="@classInfo.Id" formaction="@Url.Page("Index", new { handler = "Edit" })">Edit</button>
+                            </form>
+                            <form method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" name="id" value="@classInfo.Id" formaction="@Url.Page("Index", new { handler = "Delete" })">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
