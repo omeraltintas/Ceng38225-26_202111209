@@ -27,6 +27,7 @@
                 <textarea class="form-control" id="Description" 
                           name="classInformationModel.Description" required>@Model.classInformationModel.Description</textarea>
             </div>
+            
 
             <button type="submit" class="btn btn-primary">
                 @(Model.classInformationModel.Id == 0 ? "Add Class" : "Save Changes")
@@ -35,7 +36,11 @@
             {
                 <a href="?" class="btn btn-secondary">Cancel</a>
             }
+           
         </form>
+        <br>
+         <button id="exportJsonBtn" class="btn btn-success mb-2">Export JSON</button>
+
     </div>
 
     <div class="col-md-6">
@@ -43,11 +48,10 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Class Name</th>
-                    <th>Student Count</th>
-                    <th>Description</th>
-                    <th>Actions</th>
+                    <th onclick="toggleColumn('Id')" class="selectable">Id</th>
+                    <th onclick="toggleColumn('Class Name')" class="selectable">Class Name</th>
+                    <th onclick="toggleColumn('Student Count')" class="selectable">Student Count</th>
+                    <th onclick="toggleColumn('Description')" class="selectable">Description</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,3 +77,61 @@
     </div>
 </div>
 
+@section Scripts {
+<script>
+    
+    const selectedColumns = new Set();
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const headerCells = document.querySelectorAll("table thead th");
+
+        headerCells.forEach((cell, index) => {
+            if (index === headerCells.length - 1) return; 
+
+            cell.style.cursor = "pointer";
+            cell.addEventListener("click", () => {
+                if (selectedColumns.has(index)) {
+                    selectedColumns.delete(index);
+                    cell.style.backgroundColor = ""; 
+                } else {
+                    selectedColumns.add(index);
+                    cell.style.backgroundColor = "#d1e7dd"; 
+                }
+            });
+        });
+
+        document.getElementById("exportJsonBtn").addEventListener("click", function () {
+            const rows = document.querySelectorAll("table tbody tr");
+            const headers = Array.from(document.querySelectorAll("table thead th")).map(h => h.innerText.trim());
+
+            const exportData = [];
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll("td");
+                const rowData = {};
+
+                headers.forEach((header, i) => {
+                    if (header === "Actions") return;
+
+                    if (selectedColumns.size === 0 || selectedColumns.has(i)) {
+                        rowData[header] = cells[i].innerText.trim();
+                    }
+                });
+
+                exportData.push(rowData);
+            });
+
+            const jsonStr = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([jsonStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "exported_data.json";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    });
+</script>
+}

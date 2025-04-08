@@ -19,7 +19,7 @@ public class IndexModel : PageModel
         _logger = logger;
         if (!Classes.Any())
         {
-            //GenerateSampleData();
+            GenerateSampleData();
         }
     }
 
