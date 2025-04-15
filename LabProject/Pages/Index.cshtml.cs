@@ -10,7 +10,7 @@ public class IndexModel : PageModel
     public static List<ClassInformationModel> Classes = new List<ClassInformationModel>();
     public List<ClassInformationTable> FilteredClasses { get; set; } = new List<ClassInformationTable>();
     [BindProperty(SupportsGet = true)]
-    public string? SearchTerm { get; set; } 
+    public string? SearchTerm { get; set; }
     [BindProperty(SupportsGet = true)]
     public int PageNumber { get; set; } = 1;
     private const int PageSize = 10;
@@ -26,27 +26,49 @@ public class IndexModel : PageModel
     [BindProperty]
     public ClassInformationModel classInformationModel { get; set; }
 
-    public void OnGet()
-    {    
+    public IActionResult OnGet()
+    {
         if (classInformationModel == null)
         {
             classInformationModel = new ClassInformationModel();
         }
-        var filteredData=Classes.AsQueryable();
+        var filteredData = Classes.AsQueryable();
         if (!string.IsNullOrEmpty(SearchTerm))
         {
             filteredData = filteredData.Where(c => c.ClassName.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
         }
-        var totalRecords=filteredData.Count();
-        var paginatedData=filteredData.Skip((PageNumber-1)*PageSize).Take(PageSize).ToList();
+        var totalRecords = filteredData.Count();
+        var paginatedData = filteredData.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToList();
 
-        FilteredClasses=paginatedData.Select(x=>new ClassInformationTable
+        FilteredClasses = paginatedData.Select(x => new ClassInformationTable
         {
-            ClassName=x.ClassName,
-            StudentCount=x.StudentCount,
-            Description=x.Description,
-            Id=x.Id
+            ClassName = x.ClassName,
+            StudentCount = x.StudentCount,
+            Description = x.Description,
+            Id = x.Id
         }).ToList();
+
+        var sessionUsername = HttpContext.Session.GetString("username");
+        var sessionToken = HttpContext.Session.GetString("token");
+        var sessionId = HttpContext.Session.GetString("session_id");
+
+        var cookieUsername = Request.Cookies["username"];
+        var cookieToken = Request.Cookies["token"];
+        var cookieSessionId = Request.Cookies["session_id"];
+
+        bool isValidLogin = !string.IsNullOrEmpty(sessionUsername) &&
+                            !string.IsNullOrEmpty(sessionToken) &&
+                            sessionUsername == cookieUsername &&
+                            sessionToken == cookieToken &&
+                            HttpContext.Session.Id == cookieSessionId;
+
+        if (!isValidLogin)
+        {
+            TempData["Error"] = "Username or password is incorrect.";
+            return RedirectToPage("/Login");
+        }
+
+        return Page();
     }
 
     public IActionResult OnPost()
@@ -106,16 +128,16 @@ public class IndexModel : PageModel
 
     private void GenerateSampleData()
     {
-        
+
         for (int i = 1; i <= 100; i++)
         {
-           Classes.Add(new ClassInformationModel
-           {
-                Id=i,
-                ClassName="Class "+i,
+            Classes.Add(new ClassInformationModel
+            {
+                Id = i,
+                ClassName = "Class " + i,
                 StudentCount = new Random().Next(10, 50),
                 Description = "Description for Class " + i
-           });
+            });
         }
     }
 

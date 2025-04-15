@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "k4NjNDOwuUW1xnG1NMSAAA8dx8Ej3cD2SSO3ecMqNfY=",
+  "Hash": "kUUvEIqY15PK+S80CqDHJD97GK6kdP+eZRZyNxQDG9c=",
   "Source": "LabProject",
   "BasePath": "_content/LabProject",
   "Mode": "Default",
@@ -78,6 +78,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
+    },
+    {
+      "Identity": "C:\\Users\\Ömer\\Ceng38225-26_202111209\\LabProject\\wwwroot\\data\\users.json",
+      "SourceId": "LabProject",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Ömer\\Ceng38225-26_202111209\\LabProject\\wwwroot\\",
+      "BasePath": "_content/LabProject",
+      "RelativePath": "data/users#[.{fingerprint}]?.json",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "xhame2ecew",
+      "Integrity": "Wyt4hXeZ0fqwkdW3bB/bztKjD6x+DiRry8h9DpP1kRI=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\data\\users.json"
     },
     {
       "Identity": "C:\\Users\\Ömer\\Ceng38225-26_202111209\\LabProject\\wwwroot\\favicon.ico",
@@ -1399,6 +1420,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-Lc3pwJIFzF69KPjrcz6z+p/beOftabRFwv0lmJh8Pxs="
+        }
+      ]
+    },
+    {
+      "Route": "data/users.json",
+      "AssetFile": "C:\\Users\\Ömer\\Ceng38225-26_202111209\\LabProject\\wwwroot\\data\\users.json",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "335"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/json"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Wyt4hXeZ0fqwkdW3bB/bztKjD6x+DiRry8h9DpP1kRI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 15 Apr 2025 08:56:05 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Wyt4hXeZ0fqwkdW3bB/bztKjD6x+DiRry8h9DpP1kRI="
+        }
+      ]
+    },
+    {
+      "Route": "data/users.xhame2ecew.json",
+      "AssetFile": "C:\\Users\\Ömer\\Ceng38225-26_202111209\\LabProject\\wwwroot\\data\\users.json",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "335"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/json"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Wyt4hXeZ0fqwkdW3bB/bztKjD6x+DiRry8h9DpP1kRI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 15 Apr 2025 08:56:05 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "xhame2ecew"
+        },
+        {
+          "Name": "label",
+          "Value": "data/users.json"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Wyt4hXeZ0fqwkdW3bB/bztKjD6x+DiRry8h9DpP1kRI="
         }
       ]
     },

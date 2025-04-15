@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
+      "Id": "C:\\Users\\Ömer\\Ceng38225-26_202111209\\LabProject\\wwwroot\\data\\users.json",
+      "PackagePath": "staticwebassets\\data\\users.json"
+    },
+    {
       "Id": "C:\\Users\\Ömer\\Ceng38225-26_202111209\\LabProject\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
     },
