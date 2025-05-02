@@ -3,36 +3,38 @@
 @{
     ViewData["Title"] = "Class List";
 }
+@{
+    var formModel = Model.NewClass;
+}
 
-
-<div class="row">
+@* <div class="row">
     <div class="col-md-6">
-        <h3>@(Model.classInformationModel != null && Model.classInformationModel.Id == 0 ? "Add New Class" : "Edit Class")</h3>
+        <h3>@(Model.ClassList != null && Model.ClassList.Id == 0 ? "Add New Class" : "Edit Class")</h3>
         <form method="post">
             <div class="form-group">
                 <label for="ClassName">Class Name</label>
                 <input type="text" class="form-control" id="ClassName" 
-                       name="classInformationModel.ClassName" 
-                       value="@Model.classInformationModel.ClassName" required />
+                       name="ClassList.Name" 
+                       value="@Model.ClassList.Name" required />
             </div>
       
             <div class="form-group">
                 <label for="StudentCount">Student Count</label>
                 <input type="number" class="form-control" id="StudentCount" 
-                       name="classInformationModel.StudentCount" 
-                       value="@Model.classInformationModel.StudentCount" required />
+                       name="ClassList.PersonCount" 
+                       value="@Model.ClassList.PersonCount" required />
             </div>
             <div class="form-group">
                 <label for="Description">Description</label>
                 <textarea class="form-control" id="Description" 
-                          name="classInformationModel.Description" required>@Model.classInformationModel.Description</textarea>
+                          name="ClassList.Description" required>@Model.ClassList.Description</textarea>
             </div>
             
 
             <button type="submit" class="btn btn-primary">
-                @(Model.classInformationModel.Id == 0 ? "Add Class" : "Save Changes")
+                @(Model.ClassList.Id == 0 ? "Add Class" : "Save Changes")
             </button>
-            @if (Model.classInformationModel.Id != 0)
+            @if (Model.ClassList.Id != 0)
             {
                 <a href="?" class="btn btn-secondary">Cancel</a>
             }
@@ -40,10 +42,9 @@
         </form>
         <br>
          <button id="exportJsonBtn" class="btn btn-success mb-2">Export JSON</button>
+    </div> *@
 
-    </div>
-
-    <div class="col-md-6">
+@* <div class="col-md-6">
         <h3>Class List</h3>
         <table class="table">
             <thead>
@@ -134,4 +135,107 @@
         });
     });
 </script>
+} *@
+
+
+
+<h2>Class Management</h2>
+
+@if (Model.EditableClass != null)
+{
+    <!-- Edit Form -->
+    <h4>Edit Class</h4>
+    <form method="post" asp-page-handler="SaveEdit">
+        <input type="hidden" asp-for="EditableClass.Id" />
+        <div class="form-group">
+            <label>Class Name</label>
+            <input asp-for="EditableClass.Name" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label>Student Count</label>
+            <input asp-for="EditableClass.PersonCount" class="form-control" type="number" />
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea asp-for="EditableClass.Description" class="form-control"></textarea>
+        </div>
+        <div class="form-group form-check">
+            <input asp-for="EditableClass.IsActive" class="form-check-input" type="checkbox" />
+            <label class="form-check-label">Is Active</label>
+        </div>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
 }
+else
+{
+    <!-- Add Form -->
+   <partial name="AddClass" model="Model.NewClass" />
+
+
+}
+
+<!-- Validation Summary -->
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="text-danger mt-2">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+<!-- Table for existing classes -->
+<hr />
+<h4>Existing Classes</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Count</th>
+            <th>Description</th>
+            <th>Active</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ClassList)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.PersonCount</td>
+                <td>@item.Description</td>
+                <td>
+                    @if (item.IsActive)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Inactive</span>
+                    }
+                </td>
+                <td>
+                    <form method="post" asp-page-handler="Edit">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button class="btn btn-warning btn-sm">Edit</button>
+                    </form>
+                    <form method="post" asp-page-handler="Delete">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                    <form method="post" asp-page-handler="ToggleActive">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button class="btn btn-secondary btn-sm">
+                            @(item.IsActive ? "Pasifleştir" : "Aktifleştir")
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<partial name="_ValidationScriptsPartial" />

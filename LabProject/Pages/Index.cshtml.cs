@@ -1,51 +1,57 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using LabProject.Models;
+using LabProject.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace LabProject.Pages;
 
 public class IndexModel : PageModel
 {
+    private readonly SchoolDbContext _context;
     private readonly ILogger<IndexModel> _logger;
-    public static List<ClassInformationModel> Classes = new List<ClassInformationModel>();
-    public List<ClassInformationTable> FilteredClasses { get; set; } = new List<ClassInformationTable>();
     [BindProperty(SupportsGet = true)]
     public string? SearchTerm { get; set; }
     [BindProperty(SupportsGet = true)]
     public int PageNumber { get; set; } = 1;
     private const int PageSize = 10;
-    public IndexModel(ILogger<IndexModel> logger)
+    public IndexModel(ILogger<IndexModel> logger, SchoolDbContext context)
     {
         _logger = logger;
-        if (!Classes.Any())
+        if (!ClassList.Any())
         {
-            GenerateSampleData();
+            //GenerateSampleData();
         }
+        _context = context;
     }
-
     [BindProperty]
-    public ClassInformationModel classInformationModel { get; set; }
-
-    public IActionResult OnGet()
+    public Class EditableClass { get; set; }
+    public List<Class> ClassList { get; set; } = new List<Class>();
+    [BindProperty]
+    public Class NewClass { get; set; } = new();
+    public async Task OnGetAsync()
     {
-        if (classInformationModel == null)
+        ClassList = await _context.Classes1.ToListAsync();
+
+        if (NewClass == null)
         {
-            classInformationModel = new ClassInformationModel();
+            NewClass = new Class();
         }
-        var filteredData = Classes.AsQueryable();
+        var filteredData = ClassList.AsQueryable();
         if (!string.IsNullOrEmpty(SearchTerm))
         {
-            filteredData = filteredData.Where(c => c.ClassName.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
+            filteredData = filteredData.Where(c => c.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
         }
         var totalRecords = filteredData.Count();
         var paginatedData = filteredData.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToList();
 
-        FilteredClasses = paginatedData.Select(x => new ClassInformationTable
+        ClassList = paginatedData.Select(x => new Class
         {
-            ClassName = x.ClassName,
-            StudentCount = x.StudentCount,
+            Name = x.Name,
+            PersonCount = x.PersonCount,
             Description = x.Description,
-            Id = x.Id
+            Id = x.Id,
+            IsActive = x.IsActive
         }).ToList();
 
         var sessionUsername = HttpContext.Session.GetString("username");
@@ -65,80 +71,106 @@ public class IndexModel : PageModel
         if (!isValidLogin)
         {
             TempData["Error"] = "Username or password is incorrect.";
-            return RedirectToPage("/Login");
+            RedirectToPage("/Login");
         }
-
-        return Page();
     }
 
-    public IActionResult OnPost()
+
+    public async Task<IActionResult> OnPostAddAsync()
     {
-        if (ModelState.IsValid)
+
+        if (!ModelState.IsValid)
         {
-            int newId = Classes.Count > 0 ? Classes.Max(c => c.Id) + 1 : 1;
+            Console.WriteLine("ModelState geçersiz!");
 
-            classInformationModel.Id = newId;
-            Classes.Add(classInformationModel);
-
-            classInformationModel = new ClassInformationModel();
-
+            foreach (var entry in ModelState)
+            {
+                foreach (var error in entry.Value.Errors)
+                {
+                    Console.WriteLine($"Alan: {entry.Key}, Hata: {error.ErrorMessage}");
+                }
+            }
+            ClassList = await _context.Classes1.ToListAsync();
+            return Page();
+        }
+        try
+        {
+            _context.Classes1.Add(NewClass);
+            await _context.SaveChangesAsync();
+            System.Diagnostics.Debug.WriteLine("Kayıt başarılı!");
             return RedirectToPage();
         }
+        catch (System.Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine("HATA: " + ex.Message);
+            ModelState.AddModelError(string.Empty, "Hata oluştu: " + ex.Message);
 
-        return Page();
+            // Listeyi tekrar yükle, aksi takdirde sayfa boş kalabilir
+            ClassList = await _context.Classes1.ToListAsync();
+            return Page(); // Hatalı haliyle tekrar sayfayı döndür
+        }
+
+
     }
 
-    public IActionResult OnPostDelete(int id)
+    public async Task<IActionResult> OnPostDeleteAsync(int id)
     {
-        var classToDelete = Classes.FirstOrDefault(c => c.Id == id);
+        var classToDelete = await _context.Classes1.FindAsync(id);
         if (classToDelete != null)
         {
-            Classes.Remove(classToDelete);
+            _context.Classes1.Remove(classToDelete);
+            await _context.SaveChangesAsync();
         }
         return RedirectToPage();
     }
 
-    public IActionResult OnPostEdit(int id)
+    public async Task<IActionResult> OnPostEditAsync(int id)
     {
-        var classToEdit = Classes.FirstOrDefault(c => c.Id == id);
-        if (classToEdit != null)
-        {
-            classInformationModel = new ClassInformationModel
-            {
-                Id = classToEdit.Id,
-                ClassName = classToEdit.ClassName,
-                StudentCount = classToEdit.StudentCount,
-                Description = classToEdit.Description
-            };
-        }
+        EditableClass = await _context.Classes1.FindAsync(id);
+        ClassList = await _context.Classes1.ToListAsync(); // listeyi yeniden yükle
         return Page();
     }
 
-    public IActionResult OnPostSaveEdit()
+    public async Task<IActionResult> OnPostSaveEditAsync()
     {
-        var classToEdit = Classes.FirstOrDefault(c => c.Id == classInformationModel.Id);
+        var classToEdit = await _context.Classes1.FindAsync(EditableClass.Id);
         if (classToEdit != null)
         {
-            classToEdit.ClassName = classInformationModel.ClassName;
-            classToEdit.StudentCount = classInformationModel.StudentCount;
-            classToEdit.Description = classInformationModel.Description;
+            classToEdit.Name = EditableClass.Name;
+            classToEdit.PersonCount = EditableClass.PersonCount;
+            classToEdit.Description = EditableClass.Description;
+            classToEdit.IsActive = EditableClass.IsActive;
+
+            await _context.SaveChangesAsync();
         }
         return RedirectToPage();
     }
+
+public async Task<IActionResult> OnPostToggleActiveAsync(int id)
+{
+    var classToToggle = await _context.Classes1.FindAsync(id);
+    if (classToToggle != null)
+    {
+        classToToggle.IsActive = !classToToggle.IsActive;
+        await _context.SaveChangesAsync();
+    }
+
+    return RedirectToPage();
+}
 
     private void GenerateSampleData()
     {
 
-        for (int i = 1; i <= 100; i++)
-        {
-            Classes.Add(new ClassInformationModel
-            {
-                Id = i,
-                ClassName = "Class " + i,
-                StudentCount = new Random().Next(10, 50),
-                Description = "Description for Class " + i
-            });
-        }
+        // for (int i = 1; i <= 100; i++)
+        // {
+        //     Classes.Add(new ClassInformationModel
+        //     {
+        //         Id = i,
+        //         ClassName = "Class " + i,
+        //         StudentCount = new Random().Next(10, 50),
+        //         Description = "Description for Class " + i
+        //     });
+        // }
     }
 
 }

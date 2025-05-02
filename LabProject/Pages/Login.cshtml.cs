@@ -44,7 +44,7 @@ namespace LabProject.Pages
 
             var cookieOptions = new CookieOptions
             {
-                Expires = DateTimeOffset.Now.AddMinutes(1),
+                Expires = DateTimeOffset.Now.AddMinutes(30),
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict

@@ -1,8 +1,13 @@
+using LabProject.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
+builder.Services.AddDbContext<SchoolDbContext>(options =>
+ options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolDbConnection")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
