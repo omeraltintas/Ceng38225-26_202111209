@@ -16,4 +16,3 @@ namespace LabProject.Models
  public bool IsActive { get; set; } = true;
  }
 }
-

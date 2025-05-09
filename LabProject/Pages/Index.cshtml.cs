@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using LabProject.Models;
 using LabProject.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace LabProject.Pages;
-
 public class IndexModel : PageModel
 {
     private readonly SchoolDbContext _context;
@@ -18,10 +21,6 @@ public class IndexModel : PageModel
     public IndexModel(ILogger<IndexModel> logger, SchoolDbContext context)
     {
         _logger = logger;
-        if (!ClassList.Any())
-        {
-            //GenerateSampleData();
-        }
         _context = context;
     }
     [BindProperty]
@@ -32,7 +31,10 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
         ClassList = await _context.Classes1.ToListAsync();
-
+         if (!ClassList.Any())
+        {
+            GenerateSampleData();
+        }
         if (NewClass == null)
         {
             NewClass = new Class();
@@ -54,6 +56,7 @@ public class IndexModel : PageModel
             IsActive = x.IsActive
         }).ToList();
 
+        
         var sessionUsername = HttpContext.Session.GetString("username");
         var sessionToken = HttpContext.Session.GetString("token");
         var sessionId = HttpContext.Session.GetString("session_id");
@@ -161,16 +164,16 @@ public async Task<IActionResult> OnPostToggleActiveAsync(int id)
     private void GenerateSampleData()
     {
 
-        // for (int i = 1; i <= 100; i++)
-        // {
-        //     Classes.Add(new ClassInformationModel
-        //     {
-        //         Id = i,
-        //         ClassName = "Class " + i,
-        //         StudentCount = new Random().Next(10, 50),
-        //         Description = "Description for Class " + i
-        //     });
-        // }
+        for (int i = 1; i <= 100; i++)
+        {
+            ClassList.Add(new Class
+            {
+                Id = i,
+                Name = "Class " + i,
+                PersonCount = new Random().Next(10, 50),
+                Description = "Description for Class " + i
+            });
+        }
     }
 
 }

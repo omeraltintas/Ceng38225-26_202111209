@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using LabProject.Models;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LabProject.Pages
 {
